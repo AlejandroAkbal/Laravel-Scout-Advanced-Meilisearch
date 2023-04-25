@@ -19,6 +19,29 @@ class Builder extends LaravelScoutBuilder
         '<=',
     ];
 
+    public function whereBetween($field, array $values): static
+    {
+        //TODO: Migrate to https://www.meilisearch.com/docs/learn/advanced/filtering#to
+
+        $this->validateWhereBetweenValues($values);
+
+        $this->where($field, '>=', $values[0]);
+        $this->where($field, '<=', $values[1]);
+
+        return $this;
+    }
+
+    private function validateWhereBetweenValues(array $values)
+    {
+        if (count($values) != 2) {
+            throw new BuilderException("whereBetween values array requires exactly two elements.");
+        }
+
+        if (!is_numeric($values[0]) || !is_numeric($values[1])) {
+            throw new BuilderException("whereBetween values array should contain only numeric elements.");
+        }
+    }
+
     public function where(mixed $field, $value = null, $valueWithOperator = null): static
     {
         $this->buildWhere($field, $value, $valueWithOperator);
@@ -26,21 +49,41 @@ class Builder extends LaravelScoutBuilder
         return $this;
     }
 
-    public function orWhere($field, $value = null, $valueWithOperator = null): static
+    protected function buildWhere($field, $value = null, $valueWithOperator = null, $connector = 'AND')
     {
-        $this->buildWhere($field, $value, $valueWithOperator, 'OR');
+        if ($field instanceof Closure) {
+            $nestedBuilder = new static($this->model, '');
 
-        return $this;
-    }
+            $field($nestedBuilder);
 
-    public function whereBetween($field, array $values): static
-    {
-        $this->validateWhereBetweenValues($values);
+            $this->wheres[] = new BuilderWhere(
+                $nestedBuilder,
+                null,
+                null,
+                $connector,
+            );
 
-        $this->where($field, '>=', $values[0]);
-        $this->where($field, '<=', $values[1]);
+            return;
+        }
 
-        return $this;
+        $appliedOperator = $valueWithOperator ? $value : '=';
+
+        if (!in_array($appliedOperator, $this->allowedOperators)) {
+            $allowedOperatorsList = implode(',', $this->allowedOperators);
+
+            throw new BuilderException(
+                "Operator $appliedOperator is not allowed. Allowed operators: $allowedOperatorsList."
+            );
+        }
+
+        $appliedValue = $valueWithOperator ?: $value;
+
+        $this->wheres[] = new BuilderWhere(
+            $field,
+            $appliedOperator,
+            $appliedValue,
+            $connector,
+        );
     }
 
     public function orWhereBetween($field, array $values): static
@@ -50,6 +93,13 @@ class Builder extends LaravelScoutBuilder
                 ->where($field, '>=', $values[0])
                 ->where($field, '<=', $values[1]);
         });
+
+        return $this;
+    }
+
+    public function orWhere($field, $value = null, $valueWithOperator = null): static
+    {
+        $this->buildWhere($field, $value, $valueWithOperator, 'OR');
 
         return $this;
     }
@@ -99,53 +149,7 @@ class Builder extends LaravelScoutBuilder
     protected function getTotalCount($results): int
     {
         $engine = $this->engine();
+
         return $engine->getTotalCount($results);
-    }
-
-    protected function buildWhere($field, $value = null, $valueWithOperator = null, $connector = 'AND')
-    {
-        if ($field instanceof Closure) {
-            $nestedBuilder = new static($this->model, '');
-
-            $field($nestedBuilder);
-
-            $this->wheres[] = new BuilderWhere(
-                $nestedBuilder,
-                null,
-                null,
-                $connector,
-            );
-
-            return;
-        }
-
-        $appliedOperator = $valueWithOperator ? $value : '=';
-
-        if (!in_array($appliedOperator, $this->allowedOperators)) {
-            $allowedOperatorsList = implode(',', $this->allowedOperators);
-            throw new BuilderException(
-                "Operator $appliedOperator is not allowed. Allowed operators: $allowedOperatorsList."
-            );
-        }
-
-        $appliedValue = $valueWithOperator ?: $value;
-
-        $this->wheres[] = new BuilderWhere(
-            $field,
-            $appliedOperator,
-            $appliedValue,
-            $connector,
-        );
-    }
-
-    private function validateWhereBetweenValues(array $values)
-    {
-        if (count($values) != 2) {
-            throw new BuilderException("whereBetween values array requires exactly two elements.");
-        }
-
-        if (!is_numeric($values[0]) || !is_numeric($values[1])) {
-            throw new BuilderException("whereBetween values array should contain only numeric elements.");
-        }
     }
 }
