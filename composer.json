@@ -49,10 +49,7 @@
         "laravel": {
             "providers": [
                 "AlejandroAkbal\\ScoutAdvancedMeilisearch\\ScoutAdvancedMeilisearchServiceProvider"
-            ],
-            "aliases": {
-                "MeiliSearch": "AlejandroAkbal\\ScoutAdvancedMeilisearch\\Facades\\MeiliSearch"
-            }
+            ]
         }
     },
     "config": {

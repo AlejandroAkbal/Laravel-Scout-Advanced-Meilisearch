@@ -37,7 +37,7 @@ The driver allows testing filtering and sorting as well as Extended scout builde
 
 Meilisearch requires updating indexes filterable, sortable and searchable attributes in order to save the indexing data
 properly.
-This package provides ```MeiliSearch``` facade that has ```updateIndexSettings``` method that handles that
+This package provides ```Meilisearch``` facade that has ```updateIndexSettings``` method that handles that
 automatically.
 
 ## How to use?
@@ -45,7 +45,7 @@ automatically.
 1) In ```config/scout.php``` set ```'driver'``` to ```meilisearch_advanced``` or ```collection_advanced```
 2) Apply Searchable trait to the model (```AlejandroAkbal\ScoutAdvancedMeilisearch\Searchable```);
 3) For proper handling of the model,
-   implement ```AlejandroAkbal\ScoutAdvancedMeilisearch\Interfaces\MeiliSearchSearchableModel``` interface to the model
+   implement ```AlejandroAkbal\ScoutAdvancedMeilisearch\Interfaces\MeilisearchSearchableModel``` interface to the model
 4) Describe indexed parameters for searching in ```toSearchableArray()``` method of the model (the same way as Scout
    does)
 5) Specify searchable, filterable and sortable attributes by defining the next list of methods on the model:
@@ -60,7 +60,7 @@ automatically.
 If you change the methods ```getSearchableAttributes()```, ```getFilterableAttributes()```,
 or ```getSortableAttributes()```
 returned indexes, you have to let meilisearch know about the changes. For that purpose use the facade:
-```MeiliSearch::updateIndexSettings(new User());```
+```Meilisearch::updateIndexSettings(new User());```
 
 The method takes a model instance to update the parameters on the meilisearch server.
 

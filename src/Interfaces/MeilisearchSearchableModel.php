@@ -2,7 +2,7 @@
 
 namespace AlejandroAkbal\ScoutAdvancedMeilisearch\Interfaces;
 
-interface MeiliSearchSearchableModel
+interface MeilisearchSearchableModel
 {
     public function getSearchableAttributes(): array;
 

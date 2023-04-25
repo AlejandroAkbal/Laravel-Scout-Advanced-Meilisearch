@@ -5,7 +5,7 @@ namespace AlejandroAkbal\ScoutAdvancedMeilisearch\Engines;
 use AlejandroAkbal\ScoutAdvancedMeilisearch\Builder;
 use AlejandroAkbal\ScoutAdvancedMeilisearch\BuilderWhere;
 use AlejandroAkbal\ScoutAdvancedMeilisearch\Exceptions\BuilderException;
-use AlejandroAkbal\ScoutAdvancedMeilisearch\Interfaces\MeiliSearchSearchableModel;
+use AlejandroAkbal\ScoutAdvancedMeilisearch\Interfaces\MeilisearchSearchableModel;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Query\Builder as DatabaseQueryBuilder;
 use Illuminate\Support\Str;
@@ -54,9 +54,9 @@ class CollectionMeiliSearchTestEngine extends CollectionEngine
     {
         $modelClass = get_class($builder->model);
 
-        if (!$builder->model instanceof MeiliSearchSearchableModel) {
+        if (!$builder->model instanceof MeilisearchSearchableModel) {
             throw new BuilderException(
-                "Model '$modelClass' does not implement MeiliSearchSearchableModel interface"
+                "Model '$modelClass' does not implement MeilisearchSearchableModel interface"
             );
         }
 
