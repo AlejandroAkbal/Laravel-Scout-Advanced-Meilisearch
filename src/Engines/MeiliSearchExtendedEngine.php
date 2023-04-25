@@ -3,11 +3,11 @@
 namespace Omure\ScoutAdvancedMeilisearch\Engines;
 
 use Laravel\Scout\Builder as ScoutBuilder;
-use Laravel\Scout\Engines\MeiliSearchEngine;
+use Laravel\Scout\Engines\MeilisearchEngine;
 use Omure\ScoutAdvancedMeilisearch\Builder;
 use Omure\ScoutAdvancedMeilisearch\BuilderWhere;
 
-class MeiliSearchExtendedEngine extends MeiliSearchEngine
+class MeiliSearchExtendedEngine extends MeilisearchEngine
 {
     public function filters(ScoutBuilder $builder): string
     {
@@ -22,6 +22,21 @@ class MeiliSearchExtendedEngine extends MeiliSearchEngine
         $filters = $filters->values()->implode(' ');
         $filters = ltrim($filters, 'AND ');
         return ltrim($filters, 'OR ');
+    }
+
+    private function formatToString(BuilderWhere $where): string
+    {
+        $value = $where->value;
+
+        if (is_bool($value)) {
+            $value = $value ? 'true' : 'false';
+        } elseif (is_null($value)) {
+            $value = '"null"';
+        } elseif (!is_numeric($value)) {
+            $value = '"' . $value . '"';
+        }
+
+        return "$where->connector $where->field $where->operator $value";
     }
 
     public function update($models)
@@ -50,7 +65,7 @@ class MeiliSearchExtendedEngine extends MeiliSearchEngine
             );
         })->filter()->values()->all();
 
-        if (! empty($objects)) {
+        if (!empty($objects)) {
             $index->addDocuments($objects, $models->first()->getKeyName());
         }
     }
@@ -68,20 +83,5 @@ class MeiliSearchExtendedEngine extends MeiliSearchEngine
 
             return $element;
         })->toArray();
-    }
-
-    private function formatToString(BuilderWhere $where): string
-    {
-        $value = $where->value;
-
-        if (is_bool($value)) {
-            $value = $value ? 'true' : 'false';
-        } elseif (is_null($value)) {
-            $value = '"null"';
-        } elseif (!is_numeric($value)) {
-            $value = '"' . $value . '"';
-        }
-
-        return "$where->connector $where->field $where->operator $value";
     }
 }
