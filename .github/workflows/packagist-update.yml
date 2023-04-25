@@ -1,4 +1,4 @@
-name: "Update Packagist"
+name: "Packagist Update"
 
 on:
   push:
@@ -15,8 +15,8 @@ jobs:
         with:
           ref: main
 
-      - name: Update Packagist
-        uses: mnavarrocarter/packagist-update@v1.0
+      - name: Packagist Update
+        uses: mnavarrocarter/packagist-update@v1.0.0
         with:
           username: ${{ secrets.PACKAGIST_USERNAME }}
           api_token: ${{ secrets.PACKAGIST_TOKEN }}
