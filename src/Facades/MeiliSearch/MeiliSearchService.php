@@ -1,9 +1,9 @@
 <?php
 
-namespace Omure\ScoutAdvancedMeilisearch\Facades\MeiliSearch;
+namespace AlejandroAkbal\ScoutAdvancedMeilisearch\Facades\MeiliSearch;
 
+use AlejandroAkbal\ScoutAdvancedMeilisearch\Interfaces\MeiliSearchSearchableModel;
 use MeiliSearch\Client;
-use Omure\ScoutAdvancedMeilisearch\Interfaces\MeiliSearchSearchableModel;
 
 class MeiliSearchService
 {

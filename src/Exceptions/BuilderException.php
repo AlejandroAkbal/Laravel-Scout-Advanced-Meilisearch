@@ -1,6 +1,6 @@
 <?php
 
-namespace Omure\ScoutAdvancedMeilisearch\Exceptions;
+namespace AlejandroAkbal\ScoutAdvancedMeilisearch\Exceptions;
 
 use Exception;
 

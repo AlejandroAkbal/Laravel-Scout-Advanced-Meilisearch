@@ -1,11 +1,11 @@
 <?php
 
-namespace Omure\ScoutAdvancedMeilisearch\Tests\Feature;
+namespace AlejandroAkbal\ScoutAdvancedMeilisearch\Tests\Feature;
 
+use AlejandroAkbal\ScoutAdvancedMeilisearch\Builder;
+use AlejandroAkbal\ScoutAdvancedMeilisearch\Engines\MeiliSearchExtendedEngine;
+use AlejandroAkbal\ScoutAdvancedMeilisearch\Tests\TestCase;
 use Illuminate\Database\Eloquent\Model;
-use Omure\ScoutAdvancedMeilisearch\Builder;
-use Omure\ScoutAdvancedMeilisearch\Engines\MeiliSearchExtendedEngine;
-use Omure\ScoutAdvancedMeilisearch\Tests\TestCase;
 
 class MeilisearchDriverTest extends TestCase
 {
@@ -26,7 +26,7 @@ class MeilisearchDriverTest extends TestCase
 
         $this->assertEquals('field_a != 25 OR field_b = 15', $engine->filters($builder));
 
-        $builder->where(function(Builder $query) {
+        $builder->where(function (Builder $query) {
             $query->where('field_c', '>=', 14)
                 ->orWhere('field_d', '!=', 34);
         });

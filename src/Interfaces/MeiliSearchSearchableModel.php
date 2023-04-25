@@ -1,6 +1,6 @@
 <?php
 
-namespace Omure\ScoutAdvancedMeilisearch\Interfaces;
+namespace AlejandroAkbal\ScoutAdvancedMeilisearch\Interfaces;
 
 interface MeiliSearchSearchableModel
 {

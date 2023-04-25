@@ -1,5 +1,5 @@
 {
-    "name": "omure/scout-advanced-meilisearch",
+    "name": "alejandroakbal/laravel-scout-advanced-meilisearch",
     "description": "Laravel Scout extension that allows to use meilisearch advanced features as well as has an extended collection driver for testing purposes.",
     "keywords": [
         "meilisearch",
@@ -13,6 +13,10 @@
         {
             "name": "Max Shaian",
             "email": "max@omure.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Alejandro Akbal",
             "role": "Developer"
         }
     ],
@@ -34,21 +38,21 @@
     },
     "autoload": {
         "psr-4": {
-            "Omure\\ScoutAdvancedMeilisearch\\": "src/"
+            "AlejandroAkbal\\ScoutAdvancedMeilisearch\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Omure\\ScoutAdvancedMeilisearch\\Tests\\": "tests/"
+            "AlejandroAkbal\\ScoutAdvancedMeilisearch\\Tests\\": "tests/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Omure\\ScoutAdvancedMeilisearch\\ScoutAdvancedMeilisearchServiceProvider"
+                "AlejandroAkbal\\ScoutAdvancedMeilisearch\\ScoutAdvancedMeilisearchServiceProvider"
             ],
             "aliases": {
-                "MeiliSearch": "Omure\\ScoutAdvancedMeilisearch\\Facades\\MeiliSearch"
+                "MeiliSearch": "AlejandroAkbal\\ScoutAdvancedMeilisearch\\Facades\\MeiliSearch"
             }
         }
     },

@@ -1,9 +1,9 @@
 <?php
 
-namespace Omure\ScoutAdvancedMeilisearch\Facades\MeiliSearch;
+namespace AlejandroAkbal\ScoutAdvancedMeilisearch\Facades\MeiliSearch;
 
+use AlejandroAkbal\ScoutAdvancedMeilisearch\Interfaces\MeiliSearchSearchableModel;
 use Illuminate\Support\Facades\Facade;
-use Omure\ScoutAdvancedMeilisearch\Interfaces\MeiliSearchSearchableModel;
 
 /**
  * @method static void updateIndexSettings(MeiliSearchSearchableModel $model)

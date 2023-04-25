@@ -1,12 +1,12 @@
 <?php
 
-namespace Omure\ScoutAdvancedMeilisearch\Tests\Feature;
+namespace AlejandroAkbal\ScoutAdvancedMeilisearch\Tests\Feature;
 
+use AlejandroAkbal\ScoutAdvancedMeilisearch\Builder;
+use AlejandroAkbal\ScoutAdvancedMeilisearch\Engines\CollectionMeiliSearchTestEngine;
+use AlejandroAkbal\ScoutAdvancedMeilisearch\Tests\TestCase;
 use Illuminate\Database\Eloquent\Model;
 use Mockery\MockInterface;
-use Omure\ScoutAdvancedMeilisearch\Builder;
-use Omure\ScoutAdvancedMeilisearch\Engines\CollectionMeiliSearchTestEngine;
-use Omure\ScoutAdvancedMeilisearch\Tests\TestCase;
 
 class CollectionDriverTest extends TestCase
 {

@@ -1,16 +1,16 @@
 <?php
 
-namespace Omure\ScoutAdvancedMeilisearch\Engines;
+namespace AlejandroAkbal\ScoutAdvancedMeilisearch\Engines;
 
+use AlejandroAkbal\ScoutAdvancedMeilisearch\Builder;
+use AlejandroAkbal\ScoutAdvancedMeilisearch\BuilderWhere;
+use AlejandroAkbal\ScoutAdvancedMeilisearch\Exceptions\BuilderException;
+use AlejandroAkbal\ScoutAdvancedMeilisearch\Interfaces\MeiliSearchSearchableModel;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Query\Builder as DatabaseQueryBuilder;
 use Illuminate\Support\Str;
 use Laravel\Scout\Builder as ScoutBuilder;
 use Laravel\Scout\Engines\CollectionEngine;
-use Illuminate\Database\Query\Builder as DatabaseQueryBuilder;
-use Omure\ScoutAdvancedMeilisearch\Builder;
-use Omure\ScoutAdvancedMeilisearch\BuilderWhere;
-use Omure\ScoutAdvancedMeilisearch\Exceptions\BuilderException;
-use Omure\ScoutAdvancedMeilisearch\Interfaces\MeiliSearchSearchableModel;
 
 class CollectionMeiliSearchTestEngine extends CollectionEngine
 {
@@ -47,106 +47,6 @@ class CollectionMeiliSearchTestEngine extends CollectionEngine
         return $models->values();
     }
 
-    public function isFound(ScoutBuilder $builder, $model): bool
-    {
-        if (!$model->shouldBeSearchable()) {
-            return false;
-        }
-
-        $searchable = $model->toSearchableArray();
-        $searchable[$model->getKeyName()] = $model->getKey();
-
-        if (count($builder->wheres)) {
-            if (!$this->checkConditions($builder->wheres, $searchable)) {
-                return false;
-            }
-        }
-
-        if (!$builder->query) {
-            return true;
-        }
-
-        $searchableKeys = $model->getSearchableAttributes();
-
-        foreach ($searchable as $key => $value) {
-            if (!in_array($key, $searchableKeys)) {
-                continue;
-            }
-
-            if (!is_scalar($value)) {
-                $value = json_encode($value);
-            }
-
-            $modifiedValue = Str::lower(str_replace(['.', ','], '', $value));
-            $modifiedQuery = Str::lower(str_replace(['.', ','], '', $builder->query));
-
-            if (Str::contains($modifiedValue, $modifiedQuery)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    protected function checkConditions(array $wheres, array $searchable): bool
-    {
-        $conditions = collect($wheres)->map(function (BuilderWhere $where) use ($searchable) {
-            return [
-                'result' => $where->field instanceof Builder ? 
-                    $this->checkConditions($where->field->wheres, $searchable) : 
-                    $this->isValueFound($where, $searchable),
-                'connector' => $where->connector,
-            ];
-        });
-        
-        return $this->executeConditions($conditions->toArray());
-    }
-
-    protected function isValueFound(BuilderWhere $where, mixed $model): bool
-    {
-        $modelValue = $model[$where->field];
-
-        return match ($where->operator) {
-            '=' => is_array($modelValue) ? in_array($where->value, $modelValue) : $modelValue === $where->value,
-            '!=' => is_array($modelValue) ? !in_array($where->value, $modelValue) : $modelValue !== $where->value,
-            '>' => is_numeric($modelValue) && is_numeric($where->value) && $modelValue > $where->value,
-            '>=' => is_numeric($modelValue) && is_numeric($where->value) && $modelValue >= $where->value,
-            '<' => is_numeric($modelValue) && is_numeric($where->value) && $modelValue < $where->value,
-            '<=' => is_numeric($modelValue) && is_numeric($where->value) && $modelValue <= $where->value,
-            default => false,
-        };
-    }
-    
-    protected function executeConditions(array $conditions): bool
-    {
-        $previousResult = null;
-
-        $andsResults = [];
-
-        foreach ($conditions as $condition) {
-            if (is_null($previousResult)) {
-                $previousResult = $condition['result'];
-                continue;
-            }
-
-            if ($condition['connector'] === 'OR') {
-                $andsResults[] = $previousResult;
-                if ($previousResult) {
-                    return true;
-                }
-
-                $previousResult = $condition['result'];
-                continue;
-            }
-
-            $previousResult = $condition['result'] && $previousResult;
-        }
-
-        $andsResults[] = $previousResult;
-        
-        return in_array(true, $andsResults);
-    }
-    
     /**
      * @throws BuilderException
      */
@@ -202,5 +102,105 @@ class CollectionMeiliSearchTestEngine extends CollectionEngine
                 'Fields: ' . json_encode($sortableDifference)
             );
         }
+    }
+
+    public function isFound(ScoutBuilder $builder, $model): bool
+    {
+        if (!$model->shouldBeSearchable()) {
+            return false;
+        }
+
+        $searchable = $model->toSearchableArray();
+        $searchable[$model->getKeyName()] = $model->getKey();
+
+        if (count($builder->wheres)) {
+            if (!$this->checkConditions($builder->wheres, $searchable)) {
+                return false;
+            }
+        }
+
+        if (!$builder->query) {
+            return true;
+        }
+
+        $searchableKeys = $model->getSearchableAttributes();
+
+        foreach ($searchable as $key => $value) {
+            if (!in_array($key, $searchableKeys)) {
+                continue;
+            }
+
+            if (!is_scalar($value)) {
+                $value = json_encode($value);
+            }
+
+            $modifiedValue = Str::lower(str_replace(['.', ','], '', $value));
+            $modifiedQuery = Str::lower(str_replace(['.', ','], '', $builder->query));
+
+            if (Str::contains($modifiedValue, $modifiedQuery)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    protected function checkConditions(array $wheres, array $searchable): bool
+    {
+        $conditions = collect($wheres)->map(function (BuilderWhere $where) use ($searchable) {
+            return [
+                'result' => $where->field instanceof Builder ?
+                    $this->checkConditions($where->field->wheres, $searchable) :
+                    $this->isValueFound($where, $searchable),
+                'connector' => $where->connector,
+            ];
+        });
+
+        return $this->executeConditions($conditions->toArray());
+    }
+
+    protected function isValueFound(BuilderWhere $where, mixed $model): bool
+    {
+        $modelValue = $model[$where->field];
+
+        return match ($where->operator) {
+            '=' => is_array($modelValue) ? in_array($where->value, $modelValue) : $modelValue === $where->value,
+            '!=' => is_array($modelValue) ? !in_array($where->value, $modelValue) : $modelValue !== $where->value,
+            '>' => is_numeric($modelValue) && is_numeric($where->value) && $modelValue > $where->value,
+            '>=' => is_numeric($modelValue) && is_numeric($where->value) && $modelValue >= $where->value,
+            '<' => is_numeric($modelValue) && is_numeric($where->value) && $modelValue < $where->value,
+            '<=' => is_numeric($modelValue) && is_numeric($where->value) && $modelValue <= $where->value,
+            default => false,
+        };
+    }
+
+    protected function executeConditions(array $conditions): bool
+    {
+        $previousResult = null;
+
+        $andsResults = [];
+
+        foreach ($conditions as $condition) {
+            if (is_null($previousResult)) {
+                $previousResult = $condition['result'];
+                continue;
+            }
+
+            if ($condition['connector'] === 'OR') {
+                $andsResults[] = $previousResult;
+                if ($previousResult) {
+                    return true;
+                }
+
+                $previousResult = $condition['result'];
+                continue;
+            }
+
+            $previousResult = $condition['result'] && $previousResult;
+        }
+
+        $andsResults[] = $previousResult;
+
+        return in_array(true, $andsResults);
     }
 }

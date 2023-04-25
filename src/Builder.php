@@ -1,10 +1,10 @@
 <?php
 
-namespace Omure\ScoutAdvancedMeilisearch;
+namespace AlejandroAkbal\ScoutAdvancedMeilisearch;
 
+use AlejandroAkbal\ScoutAdvancedMeilisearch\Exceptions\BuilderException;
 use Closure;
 use Laravel\Scout\Builder as LaravelScoutBuilder;
-use Omure\ScoutAdvancedMeilisearch\Exceptions\BuilderException;
 
 class Builder extends LaravelScoutBuilder
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Omure\ScoutAdvancedMeilisearch\Tests;
+namespace AlejandroAkbal\ScoutAdvancedMeilisearch\Tests;
 
+use AlejandroAkbal\ScoutAdvancedMeilisearch\ScoutAdvancedMeilisearchServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
-use Omure\ScoutAdvancedMeilisearch\ScoutAdvancedMeilisearchServiceProvider;
 
 abstract class TestCase extends BaseTestCase
 {

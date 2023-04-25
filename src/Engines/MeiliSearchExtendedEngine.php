@@ -1,11 +1,11 @@
 <?php
 
-namespace Omure\ScoutAdvancedMeilisearch\Engines;
+namespace AlejandroAkbal\ScoutAdvancedMeilisearch\Engines;
 
+use AlejandroAkbal\ScoutAdvancedMeilisearch\Builder;
+use AlejandroAkbal\ScoutAdvancedMeilisearch\BuilderWhere;
 use Laravel\Scout\Builder as ScoutBuilder;
 use Laravel\Scout\Engines\MeilisearchEngine;
-use Omure\ScoutAdvancedMeilisearch\Builder;
-use Omure\ScoutAdvancedMeilisearch\BuilderWhere;
 
 class MeiliSearchExtendedEngine extends MeilisearchEngine
 {

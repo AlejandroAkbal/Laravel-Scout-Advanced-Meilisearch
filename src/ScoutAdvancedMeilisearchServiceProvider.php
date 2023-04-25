@@ -1,13 +1,13 @@
 <?php
 
-namespace Omure\ScoutAdvancedMeilisearch;
+namespace AlejandroAkbal\ScoutAdvancedMeilisearch;
 
+use AlejandroAkbal\ScoutAdvancedMeilisearch\Engines\CollectionMeiliSearchTestEngine;
+use AlejandroAkbal\ScoutAdvancedMeilisearch\Engines\MeiliSearchExtendedEngine;
+use AlejandroAkbal\ScoutAdvancedMeilisearch\Facades\MeiliSearch\MeiliSearchService;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Scout\EngineManager;
 use MeiliSearch\Client;
-use Omure\ScoutAdvancedMeilisearch\Engines\CollectionMeiliSearchTestEngine;
-use Omure\ScoutAdvancedMeilisearch\Engines\MeiliSearchExtendedEngine;
-use Omure\ScoutAdvancedMeilisearch\Facades\MeiliSearch\MeiliSearchService;
 
 class ScoutAdvancedMeilisearchServiceProvider extends ServiceProvider
 {

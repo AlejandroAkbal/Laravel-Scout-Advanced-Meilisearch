@@ -1,12 +1,12 @@
 <?php
 
-namespace Omure\ScoutAdvancedMeilisearch\Tests\Feature;
+namespace AlejandroAkbal\ScoutAdvancedMeilisearch\Tests\Feature;
 
+use AlejandroAkbal\ScoutAdvancedMeilisearch\Builder;
+use AlejandroAkbal\ScoutAdvancedMeilisearch\BuilderWhere;
+use AlejandroAkbal\ScoutAdvancedMeilisearch\Exceptions\BuilderException;
+use AlejandroAkbal\ScoutAdvancedMeilisearch\Tests\TestCase;
 use Illuminate\Database\Eloquent\Model;
-use Omure\ScoutAdvancedMeilisearch\Builder;
-use Omure\ScoutAdvancedMeilisearch\BuilderWhere;
-use Omure\ScoutAdvancedMeilisearch\Exceptions\BuilderException;
-use Omure\ScoutAdvancedMeilisearch\Tests\TestCase;
 
 class BuilderTest extends TestCase
 {
@@ -29,11 +29,11 @@ class BuilderTest extends TestCase
         $builder = $this->partialMock(Builder::class);
 
         $builder->where('field_a', '=', 'value_a');
-        $builder->where('field_b', '!=','value_b');
-        $builder->where('field_c', '>','value_c');
-        $builder->where('field_d', '>=','value_d');
-        $builder->where('field_e', '<','value_e');
-        $builder->where('field_f', '<=','value_f');
+        $builder->where('field_b', '!=', 'value_b');
+        $builder->where('field_c', '>', 'value_c');
+        $builder->where('field_d', '>=', 'value_d');
+        $builder->where('field_e', '<', 'value_e');
+        $builder->where('field_f', '<=', 'value_f');
 
         $this->assertCount(6, $builder->wheres);
         $this->assertEquals(new BuilderWhere('field_a', '=', 'value_a', 'AND'), $builder->wheres[0]);
@@ -74,11 +74,11 @@ class BuilderTest extends TestCase
         $builder = $this->partialMock(Builder::class);
 
         $builder->orWhere('field_a', '=', 'value_a');
-        $builder->orWhere('field_b', '!=','value_b');
-        $builder->orWhere('field_c', '>','value_c');
-        $builder->orWhere('field_d', '>=','value_d');
-        $builder->orWhere('field_e', '<','value_e');
-        $builder->orWhere('field_f', '<=','value_f');
+        $builder->orWhere('field_b', '!=', 'value_b');
+        $builder->orWhere('field_c', '>', 'value_c');
+        $builder->orWhere('field_d', '>=', 'value_d');
+        $builder->orWhere('field_e', '<', 'value_e');
+        $builder->orWhere('field_f', '<=', 'value_f');
 
         $this->assertCount(6, $builder->wheres);
         $this->assertEquals(new BuilderWhere('field_a', '=', 'value_a', 'OR'), $builder->wheres[0]);
